@@ -68,3 +68,63 @@ export interface CardWithScore extends Card {
   left_count: number
   up_count: number
 }
+
+// ─── Dating app ───────────────────────────────────────────────────────────────
+
+export type Intention = 'plezier' | 'casual' | 'relatie' | 'vriendschap'
+export type Gender = 'man' | 'vrouw' | 'non-binair' | 'anders'
+export type DiscoverDirection = 'like' | 'pass' | 'superlike'
+
+export interface Profile {
+  id: string
+  display_name: string | null
+  birth_year: number | null
+  gender: Gender | null
+  location: string | null
+  hobbies: string[]
+  looking_for: string | null
+  intention: Intention | null
+  avatar_url: string | null
+  age_min: number
+  age_max: number
+  gender_preference: string[]
+  onboarding_done: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface Match {
+  id: string
+  user_a: string
+  user_b: string
+  is_super: boolean
+  created_at: string
+}
+
+export interface MatchWithProfile extends Match {
+  profile: Profile
+  last_message?: string | null
+  unread_count?: number
+}
+
+export interface Conversation {
+  id: string
+  match_id: string
+  created_at: string
+}
+
+export interface Message {
+  id: string
+  conversation_id: string
+  sender_id: string | null
+  content: string
+  read_at: string | null
+  created_at: string
+}
+
+export interface ConversationWithDetails extends Conversation {
+  match: Match
+  other_profile: Profile
+  last_message: Message | null
+  unread_count: number
+}

@@ -1,26 +1,41 @@
 import type { Metadata } from 'next'
-import { Inter, Space_Grotesk } from 'next/font/google'
+import { Source_Serif_4, DM_Sans } from 'next/font/google'
 import './globals.css'
+import BottomNav from '@/components/BottomNav'
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  display: 'swap',
-})
-
-const spaceGrotesk = Space_Grotesk({
+const sourceSerif = Source_Serif_4({
   subsets: ['latin'],
   variable: '--font-heading',
   display: 'swap',
 })
 
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
-  title: 'MRM-Blik — Miracle Roadmap Tinder',
-  description: 'Swipe je weg naar de perfecte productroadmap. Prioriteer features met je team in 5 minuten.',
+  title: {
+    default: 'Miracle Relationship Matcher — Vind je miracle match',
+    template: '%s | Miracle Relationship Matcher',
+  },
+  description: 'De eerste dating app die matcht op zielsniveau. Gebaseerd op het VREDE-model van 365 Dagen Succesvol. Geen oppervlakkig swipen, maar diepe verbinding.',
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/favicon.svg',
+  },
   openGraph: {
-    title: 'MRM-Blik — Miracle Roadmap Tinder',
-    description: 'Swipe je weg naar de perfecte productroadmap.',
+    title: 'Miracle Relationship Matcher',
+    description: 'Vind je miracle match vanuit innerlijke vrede. De eerste dating app die matcht op zielsniveau.',
     type: 'website',
+    locale: 'nl_NL',
+    siteName: 'Miracle Relationship Matcher',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Miracle Relationship Matcher',
+    description: 'Vind je miracle match vanuit innerlijke vrede.',
   },
 }
 
@@ -30,9 +45,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="nl" className={`${inter.variable} ${spaceGrotesk.variable}`}>
-      <body className="min-h-screen font-sans antialiased">
+    <html lang="nl" className={`${sourceSerif.variable} ${dmSans.variable}`}>
+      <head>
+        <meta name="theme-color" content="#7A2E4A" />
+      </head>
+      <body className="min-h-screen font-sans antialiased pb-20">
         {children}
+        <BottomNav />
       </body>
     </html>
   )
