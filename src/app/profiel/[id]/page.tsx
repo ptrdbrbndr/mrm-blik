@@ -1,5 +1,6 @@
 import { getProfileById } from '@/lib/actions/profile'
 import BackButton from './BackButton'
+import ReportButton from '@/components/ReportButton'
 
 const intentionLabels: Record<string, { label: string; emoji: string }> = {
   plezier: { label: 'Alleen voor plezier', emoji: '✨' },
@@ -126,6 +127,8 @@ export default async function AndermansProfielPage({
           )}
 
         </div>
+
+        <ReportButton profileId={profile.id} />
 
       </div>
     </main>

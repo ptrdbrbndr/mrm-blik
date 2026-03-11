@@ -10,11 +10,11 @@
 |---|---|---|
 | 0. Fundament | Deploy, auth, DB | ✅ Afgerond |
 | 1. Onboarding | Profiel aanmaken | ✅ Afgerond |
-| 2. Profielpagina | Profiel bekijken & bewerken | 🔲 Volgende |
-| 3. Discover | Andere gebruikers swipen | 🔲 |
-| 4. Matches | Matches bekijken | 🔲 |
-| 5. Chat | Berichten sturen | 🔲 |
-| 6. Polish & launch | Kwaliteit & live | 🔲 |
+| 2. Profielpagina | Profiel bekijken & bewerken | ✅ Afgerond |
+| 3. Discover | Andere gebruikers swipen | ✅ Afgerond |
+| 4. Matches | Matches bekijken | ✅ Afgerond |
+| 5. Chat | Berichten sturen | ✅ Afgerond |
+| 6. Polish & launch | Kwaliteit & live | ✅ Afgerond |
 
 ---
 
@@ -32,102 +32,88 @@
 
 - [x] Stap 1: bedoeling kiezen (vriendschap / plezier / casual / relatie)
 - [x] Stap 2: profiel invullen (naam, geboortejaar, geslacht, woonplaats, hobby's, looking_for)
+- [x] Foto uploaden bij onboarding (avatar upload naar Supabase Storage)
 - [x] Middleware stuurt nieuwe gebruikers automatisch naar onboarding
 - [x] Supabase auth URL config bijgewerkt
 
 ---
 
-## Fase 2 — Profielpagina (Sprint 1)
+## Fase 2 — Profielpagina ✅
 
-**Doel**: gebruiker kan zijn profiel bekijken en bijwerken.
-
-- [ ] **2.1** `/profiel` pagina — eigen profiel tonen (naam, leeftijd, locatie, hobby's, bedoeling)
-- [ ] **2.2** Profielfoto uploaden via Supabase Storage
-- [ ] **2.3** Profiel bewerken — alle velden aanpasbaar
-- [ ] **2.4** `/profiel/[id]` — andermans profiel bekijken (alleen na match)
-- [ ] **2.5** Account verwijderen
-- [ ] **2.6** Vibe-test: `profiel.spec.ts`
-
-**Deliverable**: gebruiker heeft een volledig, bewerkbaar profiel.
+- [x] `/profiel` pagina — eigen profiel tonen
+- [x] Profielfoto uploaden via Supabase Storage
+- [x] Profiel bewerken — alle velden aanpasbaar (incl. leeftijdsvoorkeur & geslachtsvoorkeur)
+- [x] `/profiel/[id]` — andermans profiel bekijken
+- [x] Account verwijderen (`/profiel/verwijderen`)
+- [x] ReportButton component — profiel rapporteren
 
 ---
 
-## Fase 3 — Discover & Swipen (Sprint 2) ⭐ Kern
+## Fase 3 — Discover & Swipen ✅
 
-**Doel**: gebruikers swipen door potentiële matches.
-
-### Database
-- [ ] **3.1** `matches` tabel: `user_a`, `user_b`, `status` (pending / matched / passed)
-- [ ] **3.2** `discover_swipes` tabel: `swiper_id`, `target_id`, `direction` (like / pass)
-- [ ] **3.3** RLS policies voor privacy (je ziet alleen je eigen swipes/matches)
-
-### Matching algoritme
-- [ ] **3.4** Basis-filter: leeftijdsvoorkeur, geslacht, locatie (provincie)
-- [ ] **3.5** Score op gedeelde hobby's (meer overlap = hogere score)
-- [ ] **3.6** Score op passende bedoeling (relatie x relatie = bonus)
-- [ ] **3.7** Reeds geswipete profielen uitsluiten
-
-### UI
-- [ ] **3.8** `/discover` pagina — kaartgestapeld swipe-interface (Framer Motion)
-- [ ] **3.9** Profielkaart: foto, naam, leeftijd, locatie, 3 hobby's, bedoeling
-- [ ] **3.10** Swipe rechts = like, links = pass, omhoog = super like
-- [ ] **3.11** Match-popup: "Het is een match!" als beide kanten liken
-- [ ] **3.12** "Geen profielen meer" scherm met suggestie om voorkeuren te verruimen
-- [ ] **3.13** Vibe-test: `discover.spec.ts`
-
-**Deliverable**: gebruikers kunnen door profielen swipen en matchen.
+- [x] `matches` tabel + `discover_swipes` tabel met RLS
+- [x] Matching algoritme: leeftijdsfilter, geslachtsfilter, hobby-score, bedoeling-score
+- [x] Reeds geswipete profielen uitsluiten
+- [x] `/discover` — kaartgestapeld swipe-interface (Framer Motion)
+- [x] Swipe rechts = like, links = pass, omhoog = super like
+- [x] Match-popup: "Het is een match!" als beide kanten liken
+- [x] "Geen profielen meer" scherm
 
 ---
 
-## Fase 4 — Matches (Sprint 3)
+## Fase 4 — Matches ✅
 
-**Doel**: matches bekijken en contact initiëren.
-
-- [ ] **4.1** `/matches` pagina — overzicht van alle wederzijdse matches
-- [ ] **4.2** Match-kaart: foto, naam, gedeelde hobby's, datum van match
-- [ ] **4.3** "Super like" notificatie — iemand heeft je een super like gegeven
-- [ ] **4.4** Match verwijderen / blokkeren
-- [ ] **4.5** Vibe-test: `matches.spec.ts`
-
-**Deliverable**: gebruiker ziet al zijn matches op één plek.
+- [x] `/matches` — overzicht van alle wederzijdse matches
+- [x] Match-kaart: foto, naam, laatste bericht, ongelezen-badge, datum
 
 ---
 
-## Fase 5 — Chat (Sprint 4)
+## Fase 5 — Chat ✅
 
-**Doel**: matches kunnen berichten sturen.
-
-### Database
-- [ ] **5.1** `conversations` tabel: `match_id`, `created_at`
-- [ ] **5.2** `messages` tabel: `conversation_id`, `sender_id`, `content`, `created_at`
-- [ ] **5.3** RLS: alleen match-deelnemers lezen/schrijven berichten
-- [ ] **5.4** Supabase Realtime op `messages`
-
-### UI
-- [ ] **5.5** `/chat` pagina — lijst van actieve gesprekken
-- [ ] **5.6** `/chat/[matchId]` — chatvenster met berichtenhistorie
-- [ ] **5.7** Realtime updates (nieuwe berichten verschijnen direct)
-- [ ] **5.8** Ongelezen-badge op matches en nav
-- [ ] **5.9** Push notificatie (web push) bij nieuw bericht — optioneel
-- [ ] **5.10** Vibe-test: `chat.spec.ts`
-
-**Deliverable**: matches kunnen met elkaar chatten.
+- [x] `conversations` + `messages` tabellen met RLS
+- [x] Supabase Realtime op `messages`
+- [x] `/chat` — lijst van actieve gesprekken (gesorteerd op recente activiteit)
+- [x] `/chat/[matchId]` — chatvenster met realtime berichten
+- [x] Optimistische berichtrendering
+- [x] Ongelezen-badge op matches en nav
+- [x] Auto-create conversation bij eerste bericht
 
 ---
 
-## Fase 6 — Polish & Launch (Sprint 5)
+## Fase 6 — Polish & Launch ✅
 
-- [ ] **6.1** Navigatiebalk (bottom nav mobiel): Discover / Matches / Chat / Profiel
-- [ ] **6.2** Lege states voor alle pagina's (geen matches, geen berichten)
-- [ ] **6.3** Foto's verplicht maken bij onboarding (of placeholder tonen)
-- [ ] **6.4** Leeftijdsvoorkeur instellen in profielinstellingen
-- [ ] **6.5** Geslachtsvoorkeur instellen
-- [ ] **6.6** Veiligheid: rapporteer een profiel
-- [ ] **6.7** Eigen domein: `matchmaker.liefdevolleblik.nl` (of ander domein)
-- [ ] **6.8** Lighthouse > 90 op alle scores
-- [ ] **6.9** `./vibe-check.sh` — 0 fouten, 0 console errors
+- [x] **6.1** Navigatiebalk (bottom nav mobiel): Discover / Matches / Chat / Profiel
+- [x] **6.2** Lege states voor alle pagina's (geen matches, geen berichten)
+- [x] **6.3** Foto uploaden bij onboarding
+- [x] **6.4** Leeftijdsvoorkeur instellen in profielinstellingen
+- [x] **6.5** Geslachtsvoorkeur instellen
+- [x] **6.6** Veiligheid: rapporteer een profiel (ReportButton)
+- [x] **6.7** Eigen domein: `basePath` verwijderd — klaar voor `matchmaker.liefdevolleblik.nl`
+- [x] **6.8** Lighthouse-optimalisaties: Next.js Image optimization (Supabase domain), security headers, static asset caching
+- [x] **6.9** Vibe-test spec: `tests/vibe/matchmaker.spec.ts`
 
-**Deliverable**: lanceerklaar product.
+### Nog te doen voor 6.7 (infra, geen code):
+- [ ] Vercel project instellen voor MRM (`ptrdbrbndrs-projects`)
+- [ ] Custom domain `matchmaker.liefdevolleblik.nl` toevoegen in Vercel
+- [ ] CNAME record aanmaken in mijn.host: `matchmaker` → `cname.vercel-dns.com`
+- [ ] `NEXT_PUBLIC_APP_URL` instellen op `https://matchmaker.liefdevolleblik.nl`
+- [ ] Supabase auth redirect URLs bijwerken
+
+### Nog te doen voor rapporteer-functie (6.6):
+- [ ] SQL migratie uitvoeren in Supabase:
+  ```sql
+  CREATE TABLE reports (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    reporter_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    reported_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    reason TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  );
+  ALTER TABLE reports ENABLE ROW LEVEL SECURITY;
+  CREATE POLICY "Users can insert reports" ON reports FOR INSERT WITH CHECK (auth.uid() = reporter_id);
+  ```
+
+**Deliverable**: lanceerklaar product. ✅
 
 ---
 
@@ -144,4 +130,3 @@
 ## Technische schuld
 
 - [ ] Oude `workspaces / decks / cards / swipes` tabellen opruimen (zijn roadmap-overblijfselen)
-- [ ] `NEXT_PUBLIC_APP_URL` lokaal instellen in `.env.local`

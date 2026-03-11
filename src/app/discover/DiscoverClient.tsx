@@ -109,7 +109,7 @@ function ProfileCard({ profile, myHobbies, onSwipe, isTop }: ProfileCardProps) {
               src={avatarUrl}
               alt={profile.display_name ?? 'Profiel foto'}
               fill
-              unoptimized
+
               className="object-cover"
               data-testid="profile-photo"
             />

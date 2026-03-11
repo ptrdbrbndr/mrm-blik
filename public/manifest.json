@@ -1,0 +1,17 @@
+{
+  "name": "Miracle Relationship Matcher",
+  "short_name": "Miracle Match",
+  "description": "Vind je miracle match vanuit innerlijke vrede. De eerste dating app die matcht op zielsniveau.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FBF8F4",
+  "theme_color": "#7A2E4A",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

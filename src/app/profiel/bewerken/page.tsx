@@ -46,6 +46,10 @@ export default function ProfielBewerkenPage() {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
 
+  const [ageMin, setAgeMin] = useState('18')
+  const [ageMax, setAgeMax] = useState('99')
+  const [genderPreference, setGenderPreference] = useState<string[]>([])
+
   useEffect(() => {
     async function loadProfile() {
       const supabase = createClient()
@@ -74,6 +78,9 @@ export default function ProfielBewerkenPage() {
       setLookingFor(data.looking_for ?? '')
       setIntention(data.intention ?? null)
       setAvatarUrl(data.avatar_url ?? null)
+      setAgeMin(data.age_min ? String(data.age_min) : '18')
+      setAgeMax(data.age_max ? String(data.age_max) : '99')
+      setGenderPreference(data.gender_preference ?? [])
       setLoading(false)
     }
 
@@ -136,6 +143,9 @@ export default function ProfielBewerkenPage() {
         looking_for: lookingFor,
         intention,
         avatar_url: newAvatarUrl,
+        age_min: ageMin ? parseInt(ageMin) : 18,
+        age_max: ageMax ? parseInt(ageMax) : 99,
+        gender_preference: genderPreference,
       })
       .eq('id', userId)
 
@@ -339,6 +349,79 @@ export default function ProfielBewerkenPage() {
                   {hobby}
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Matchvoorkeur geslacht */}
+          <div>
+            <label className="block text-sm font-medium text-primary/80 mb-2">
+              Ik zoek een match
+            </label>
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              {genders.map(({ value, label }) => (
+                <button
+                  key={value}
+                  type="button"
+                  data-testid={`edit-gender-pref-${value}`}
+                  onClick={() =>
+                    setGenderPreference(prev =>
+                      prev.includes(value) ? prev.filter(g => g !== value) : [...prev, value]
+                    )
+                  }
+                  className={`rounded-lg border-2 py-2.5 text-sm font-medium transition-all ${
+                    genderPreference.includes(value)
+                      ? 'border-accent bg-accent/5 text-accent'
+                      : 'border-primary/10 text-primary/70 hover:border-primary/25'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              data-testid="edit-gender-pref-iedereen"
+              onClick={() => setGenderPreference([])}
+              className={`w-full rounded-lg border-2 py-2.5 text-sm font-medium transition-all ${
+                genderPreference.length === 0
+                  ? 'border-accent bg-accent/5 text-accent'
+                  : 'border-primary/10 text-primary/70 hover:border-primary/25'
+              }`}
+            >
+              Iedereen
+            </button>
+          </div>
+
+          {/* Leeftijdsvoorkeur */}
+          <div>
+            <label className="block text-sm font-medium text-primary/80 mb-2">
+              Leeftijdsvoorkeur
+            </label>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs text-primary/40 mb-1">Minimaal</label>
+                <input
+                  type="number"
+                  value={ageMin}
+                  onChange={e => setAgeMin(e.target.value)}
+                  min="18"
+                  max="99"
+                  data-testid="edit-age-min"
+                  className="w-full rounded-lg border border-primary/20 bg-white px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-primary/40 mb-1">Maximaal</label>
+                <input
+                  type="number"
+                  value={ageMax}
+                  onChange={e => setAgeMax(e.target.value)}
+                  min="18"
+                  max="99"
+                  data-testid="edit-age-max"
+                  className="w-full rounded-lg border border-primary/20 bg-white px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
+                />
+              </div>
             </div>
           </div>
 

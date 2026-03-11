@@ -68,7 +68,7 @@ function AvatarCircle({
           src={resolved}
           alt={name ?? 'Avatar'}
           fill
-          unoptimized
+
           className="object-cover"
         />
       ) : (

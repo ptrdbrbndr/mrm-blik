@@ -66,7 +66,7 @@ export default async function ChatPage() {
                         alt={conv.other_profile.display_name ?? 'Avatar'}
                         width={56}
                         height={56}
-                        unoptimized={true}
+
                         className="object-cover w-full h-full"
                       />
                     ) : (

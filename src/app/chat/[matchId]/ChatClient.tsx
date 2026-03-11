@@ -142,7 +142,7 @@ export default function ChatClient({ matchId, initialMessages, otherProfile, cur
                 alt={otherProfile.display_name ?? 'Avatar'}
                 width={32}
                 height={32}
-                unoptimized={true}
+
                 className="object-cover w-full h-full"
               />
             ) : (

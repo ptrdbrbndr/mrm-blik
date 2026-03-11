@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
@@ -40,6 +40,18 @@ export default function OnboardingPage() {
   const [location, setLocation] = useState('')
   const [hobbies, setHobbies] = useState<string[]>([])
   const [lookingFor, setLookingFor] = useState('')
+  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setAvatarFile(file)
+    const reader = new FileReader()
+    reader.onload = (ev) => setAvatarPreview(ev.target?.result as string)
+    reader.readAsDataURL(file)
+  }
 
   function toggleHobby(hobby: string) {
     setHobbies(prev =>
@@ -55,6 +67,20 @@ export default function OnboardingPage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { router.push('/login'); return }
 
+    // Upload foto als geselecteerd
+    let avatarUrl: string | null = null
+    if (avatarFile) {
+      const ext = avatarFile.name.split('.').pop()
+      const path = `${user.id}/avatar.${ext}`
+      const { error: uploadErr } = await supabase.storage
+        .from('avatars')
+        .upload(path, avatarFile, { upsert: true })
+      if (!uploadErr) {
+        const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(path)
+        avatarUrl = publicUrl
+      }
+    }
+
     const { error } = await supabase.from('profiles').upsert({
       id: user.id,
       intention,
@@ -65,6 +91,7 @@ export default function OnboardingPage() {
       hobbies,
       looking_for: lookingFor,
       onboarding_done: true,
+      ...(avatarUrl ? { avatar_url: avatarUrl } : {}),
     })
 
     if (error) {
@@ -149,6 +176,43 @@ export default function OnboardingPage() {
             </p>
 
             <div className="space-y-5">
+              {/* Foto uploaden */}
+              <div className="flex flex-col items-center">
+                <button
+                  type="button"
+                  data-testid="onboarding-avatar-btn"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="relative group"
+                >
+                  {avatarPreview ? (
+                    <img src={avatarPreview} alt="Preview" className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md" />
+                  ) : (
+                    <div className="w-20 h-20 rounded-full bg-accent/10 border-4 border-white shadow-md border-dashed border-accent/30 flex items-center justify-center">
+                      <svg className="w-8 h-8 text-accent/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                      </svg>
+                    </div>
+                  )}
+                  <div className="absolute inset-0 rounded-full bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                    </svg>
+                  </div>
+                </button>
+                <p className="text-xs text-primary/40 mt-2">
+                  {avatarPreview ? 'Foto geselecteerd ✓' : 'Voeg een profielfoto toe (optioneel)'}
+                </p>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarChange}
+                  data-testid="onboarding-avatar-input"
+                  className="hidden"
+                />
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-primary/80 mb-1.5">
                   Hoe wil je heten?
