@@ -5,6 +5,7 @@ import type { Card, Deck } from '@/types/database'
 import CardEditor from '@/components/CardEditor'
 import CSVImport from '@/components/CSVImport'
 import DeckStatusBar from '@/components/DeckStatusBar'
+import RealtimeSwipeCount from '@/components/RealtimeSwipeCount'
 
 interface DeckDetailClientProps {
   deck: Deck
@@ -33,17 +34,22 @@ export default function DeckDetailClient({ deck, initialCards, swipeCount }: Dec
         />
       </div>
 
-      {swipeCount > 0 && (
-        <div className="mt-4 rounded-lg bg-accent/5 border border-accent/20 px-4 py-3" data-testid="swipe-count-info">
-          <p className="text-sm text-accent font-medium">
-            {swipeCount} swipe{swipeCount !== 1 ? 's' : ''} ontvangen
-          </p>
-          <a
-            href={`/deck/${deck.id}/results`}
-            className="text-xs text-accent/70 hover:text-accent underline"
-          >
-            Bekijk resultaten
-          </a>
+      {deck.status !== 'draft' && (
+        <div className="mt-4 space-y-2" data-testid="swipe-count-info">
+          <RealtimeSwipeCount
+            deckId={deck.id}
+            initialCount={swipeCount}
+            initialParticipants={0}
+          />
+          {swipeCount > 0 && (
+            <a
+              href={`/deck/${deck.id}/results`}
+              className="inline-block text-xs text-accent/70 hover:text-accent underline"
+              data-testid="view-results-link"
+            >
+              Bekijk resultaten
+            </a>
+          )}
         </div>
       )}
 

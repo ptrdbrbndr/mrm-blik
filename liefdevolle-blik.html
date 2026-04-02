@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liefdevolle Blik</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF6EE;
+    --ivory: #F2EBD9;
+    --warm: #E8D5B0;
+    --amber: #C8935A;
+    --terracotta: #B85C38;
+    --rust: #8B3A1E;
+    --ink: #2C1810;
+    --ink-light: #5C3D2E;
+    --sage: #7A8C6E;
+    --blush: #E8B4A0;
+    --shadow: rgba(44,24,16,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Lora', Georgia, serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Paper texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ─── NAVIGATION ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(250,246,238,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--warm);
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .nav-brand .eye-icon { font-size: 22px; }
+  .nav-brand span {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-links { display: flex; gap: 8px; }
+  .nav-btn {
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-family: 'Lora', serif;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .nav-btn.ghost {
+    background: transparent;
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+  .nav-btn.ghost:hover { background: var(--amber); color: white; }
+  .nav-btn.solid {
+    background: var(--terracotta);
+    color: white;
+    border-color: var(--terracotta);
+  }
+  .nav-btn.solid:hover { background: var(--rust); }
+
+  /* ─── SCREENS ─── */
+  .screen {
+    display: none;
+    min-height: 100vh;
+    padding-top: 70px;
+    animation: fadeIn 0.4s ease;
+  }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ─── LANDING ─── */
+  #screen-landing {
+    background: var(--cream);
+  }
+
+  .hero {
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--blush) 0%, transparent 70%);
+    opacity: 0.4;
+  }
+  .hero-bg-circle:nth-child(1) { width: 500px; height: 500px; top: -100px; left: -100px; }
+  .hero-bg-circle:nth-child(2) { width: 400px; height: 400px; bottom: -80px; right: -60px; background: radial-gradient(circle, var(--warm) 0%, transparent 70%); }
+
+  .hero-eyebrow {
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    color: var(--amber);
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 7vw, 72px);
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+
+  .hero-subtitle {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--ink-light);
+    max-width: 540px;
+    margin: 20px auto 40px;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-primary {
+    padding: 14px 36px;
+    background: var(--terracotta);
+    color: white;
+    border: none;
+    border-radius: 100px;
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 4px 20px rgba(184,92,56,0.35);
+  }
+  .btn-primary:hover { background: var(--rust); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(184,92,56,0.45); }
+
+  .btn-secondary {
+    padding: 14px 36px;
+    background: transparent;
+    color: var(--ink-light);
+    border: 1.5px solid var(--warm);
+    border-radius: 100px;
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .btn-secondary:hover { border-color: var(--amber); color: var(--amber); }
+
+  /* ─── JAR ILLUSTRATION ─── */
+  .jar-container {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0 60px;
+    position: relative;
+  }
+
+  .jar-svg { filter: drop-shadow(0 12px 30px var(--shadow)); }
+
+  /* ─── HOW IT WORKS ─── */
+  .how-section {
+    padding: 60px 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Caveat', cursive;
+    font-size: 16px;
+    color: var(--amber);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    text-align: center;
+    color: var(--ink);
+    margin-bottom: 50px;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 32px;
+  }
+
+  .step {
+    text-align: center;
+    padding: 32px 24px;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--ivory);
+    box-shadow: 0 2px 12px var(--shadow);
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .step:hover { transform: translateY(-4px); box-shadow: 0 8px 24px var(--shadow); }
+
+  .step-number {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 2px solid var(--warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Caveat', cursive;
+    font-size: 22px;
+    color: var(--terracotta);
+    margin: 0 auto 16px;
+  }
+
+  .step h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+
+  .step p { font-size: 14px; line-height: 1.6; color: var(--ink-light); }
+
+  /* ─── AUTH SCREEN ─── */
+  #screen-auth {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: var(--cream);
+  }
+  #screen-auth.active { display: flex; }
+
+  .auth-card {
+    background: white;
+    border-radius: 24px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 8px 40px var(--shadow);
+    border: 1px solid var(--ivory);
+    margin: 20px;
+  }
+
+  .auth-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .auth-card p {
+    font-size: 14px;
+    color: var(--ink-light);
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-radius: 100px;
+    background: var(--cream);
+    padding: 4px;
+    margin-bottom: 28px;
+    border: 1px solid var(--warm);
+  }
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-family: 'Lora', serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--ink-light);
+    background: transparent;
+    border: none;
+  }
+  .tab.active { background: var(--terracotta); color: white; box-shadow: 0 2px 8px rgba(184,92,56,0.3); }
+
+  .form-group { margin-bottom: 20px; }
+  .form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-light);
+    margin-bottom: 8px;
+    letter-spacing: 0.03em;
+  }
+  .form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--warm);
+    border-radius: 12px;
+    font-family: 'Lora', serif;
+    font-size: 15px;
+    color: var(--ink);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-input:focus {
+    border-color: var(--amber);
+    box-shadow: 0 0 0 3px rgba(200,147,90,0.15);
+    background: white;
+  }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .form-hint {
+    font-size: 12px;
+    color: var(--ink-light);
+    margin-top: 6px;
+    opacity: 0.7;
+  }
+
+  .auth-submit {
+    width: 100%;
+    padding: 14px;
+    background: var(--terracotta);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-top: 8px;
+    box-shadow: 0 4px 16px rgba(184,92,56,0.3);
+  }
+  .auth-submit:hover { background: var(--rust); transform: translateY(-1px); }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    color: var(--ink-light);
+    font-size: 13px;
+    opacity: 0.6;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1;
+    height: 1px;
+    background: var(--warm);
+  }
+
+  /* ─── DASHBOARD ─── */
+  #screen-dashboard {
+    background: var(--cream);
+  }
+
+  .dash-header {
+    background: white;
+    border-bottom: 1px solid var(--warm);
+    padding: 24px 40px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .dash-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: var(--ink);
+  }
+
+  .dash-header p {
+    font-size: 14px;
+    color: var(--ink-light);
+    margin-top: 4px;
+  }
+
+  .countdown-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--cream);
+    border: 1.5px solid var(--warm);
+    border-radius: 12px;
+    padding: 12px 20px;
+    white-space: nowrap;
+  }
+
+  .countdown-badge .lock-icon { font-size: 20px; }
+
+  .countdown-badge .countdown-text {
+    font-family: 'Caveat', cursive;
+    font-size: 15px;
+    color: var(--ink-light);
+  }
+
+  .countdown-badge strong {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--terracotta);
+  }
+
+  .dash-body {
+    padding: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .members-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+
+  .member-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1.5px solid var(--ivory);
+    box-shadow: 0 2px 10px var(--shadow);
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .member-card:hover {
+    border-color: var(--amber);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px var(--shadow);
+  }
+  .member-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--amber), var(--terracotta));
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .member-card:hover::before { opacity: 1; }
+
+  .member-avatar {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 2px solid var(--warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--terracotta);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  .member-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .member-meta { font-size: 13px; color: var(--ink-light); opacity: 0.7; }
+
+  .member-note-count {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--ivory);
+    font-size: 13px;
+    color: var(--sage);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .write-note-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px;
+    margin-top: 12px;
+    background: var(--cream);
+    border: 1.5px dashed var(--amber);
+    border-radius: 10px;
+    font-family: 'Lora', serif;
+    font-size: 13px;
+    color: var(--amber);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .write-note-btn:hover { background: var(--ivory); }
+
+  /* ─── WRITE NOTE MODAL ─── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(44,24,16,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; animation: fadeIn 0.25s ease; }
+
+  .modal {
+    background: var(--cream);
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 20px 60px rgba(44,24,16,0.25);
+    border: 1px solid var(--warm);
+    position: relative;
+  }
+
+  .modal-header {
+    margin-bottom: 24px;
+  }
+
+  .modal-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .modal-header p { font-size: 14px; color: var(--ink-light); }
+
+  .to-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    border: 1px solid var(--warm);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 14px;
+    color: var(--ink-light);
+    margin-bottom: 20px;
+  }
+  .to-badge strong { color: var(--terracotta); font-style: italic; font-family: 'Playfair Display', serif; }
+
+  .note-paper {
+    width: 100%;
+    min-height: 160px;
+    padding: 16px;
+    border: 1.5px solid var(--warm);
+    border-radius: 12px;
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    color: var(--ink);
+    background: white;
+    outline: none;
+    resize: vertical;
+    line-height: 1.7;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .note-paper:focus {
+    border-color: var(--amber);
+    box-shadow: 0 0 0 3px rgba(200,147,90,0.15);
+  }
+
+  .note-paper::placeholder { color: var(--warm); }
+
+  .char-count {
+    font-size: 12px;
+    color: var(--ink-light);
+    opacity: 0.5;
+    text-align: right;
+    margin-top: 6px;
+    margin-bottom: 20px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  .btn-cancel {
+    padding: 10px 24px;
+    background: transparent;
+    border: 1.5px solid var(--warm);
+    border-radius: 10px;
+    font-family: 'Lora', serif;
+    font-size: 14px;
+    color: var(--ink-light);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-cancel:hover { border-color: var(--amber); }
+
+  .btn-send {
+    padding: 10px 28px;
+    background: var(--terracotta);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Lora', serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(184,92,56,0.3);
+  }
+  .btn-send:hover { background: var(--rust); }
+
+  .close-modal {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 1px solid var(--warm);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-light);
+    transition: all 0.2s;
+  }
+  .close-modal:hover { background: var(--ivory); }
+
+  /* ─── SUCCESS TOAST ─── */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--ink);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-family: 'Lora', serif;
+    z-index: 999;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap;
+    box-shadow: 0 8px 24px rgba(44,24,16,0.3);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ─── OPENING DAY SCREEN ─── */
+  #screen-opening {
+    display: none;
+    background: var(--cream);
+    min-height: 100vh;
+  }
+  #screen-opening.active { display: block; }
+
+  .opening-hero {
+    padding: 60px 40px 40px;
+    text-align: center;
+    background: linear-gradient(180deg, var(--ivory) 0%, var(--cream) 100%);
+    border-bottom: 1px solid var(--warm);
+  }
+
+  .opening-hero .eyebrow {
+    font-family: 'Caveat', cursive;
+    font-size: 20px;
+    color: var(--amber);
+    margin-bottom: 12px;
+  }
+
+  .opening-hero h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 52px);
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .opening-hero h2 em { font-style: italic; color: var(--terracotta); }
+
+  .opening-hero p {
+    font-size: 16px;
+    color: var(--ink-light);
+    max-width: 480px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+  }
+
+  .channel-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .channel-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 100px;
+    font-family: 'Lora', serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: none;
+    box-shadow: 0 4px 14px var(--shadow);
+  }
+
+  .channel-btn.wa {
+    background: #25D366;
+    color: white;
+  }
+  .channel-btn.wa:hover { background: #128C7E; }
+
+  .channel-btn.mail {
+    background: var(--ink);
+    color: white;
+  }
+  .channel-btn.mail:hover { background: var(--rust); }
+
+  /* ─── NOTE CLOUD ─── */
+  .note-cloud-section {
+    padding: 50px 40px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .note-cloud-section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--ink);
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .note-cloud-section > p {
+    text-align: center;
+    font-size: 14px;
+    color: var(--ink-light);
+    margin-bottom: 40px;
+  }
+
+  .notes-mosaic {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .note-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px 22px;
+    border: 1px solid var(--ivory);
+    box-shadow: 0 4px 16px var(--shadow);
+    width: calc(50% - 10px);
+    min-width: 240px;
+    max-width: 380px;
+    transform: rotate(var(--rot, 0deg));
+    transition: transform 0.25s, box-shadow 0.25s;
+    position: relative;
+  }
+  .note-card:hover {
+    transform: rotate(0deg) translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 32px var(--shadow);
+    z-index: 10;
+  }
+
+  .note-card::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 12px;
+    background: var(--warm);
+    border-radius: 4px;
+    opacity: 0.6;
+  }
+
+  .note-card-from {
+    font-size: 12px;
+    color: var(--amber);
+    font-family: 'Caveat', cursive;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+
+  .note-card-to {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+
+  .note-card-text {
+    font-family: 'Caveat', cursive;
+    font-size: 17px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  /* ─── ADMIN SCREEN ─── */
+  #screen-admin {
+    background: var(--cream);
+  }
+
+  .admin-body {
+    padding: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .admin-body h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .admin-body > p {
+    color: var(--ink-light);
+    font-size: 15px;
+    margin-bottom: 36px;
+  }
+
+  .admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .admin-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    border: 1px solid var(--ivory);
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+
+  .admin-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--ivory);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .member-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--cream);
+  }
+
+  .member-list-item:last-child { border-bottom: none; }
+
+  .member-list-info { display: flex; align-items: center; gap: 10px; }
+
+  .mini-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 1.5px solid var(--warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: var(--terracotta);
+    font-weight: 600;
+  }
+
+  .member-list-name { font-size: 14px; color: var(--ink); }
+  .member-list-meta { font-size: 12px; color: var(--ink-light); opacity: 0.6; }
+
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--sage);
+  }
+
+  .date-picker-section { margin-top: 10px; }
+  .date-picker-section .form-label { margin-bottom: 10px; }
+  .date-picker-section .form-input { margin-bottom: 16px; }
+
+  .admin-action-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--cream);
+    border: 1.5px solid var(--amber);
+    border-radius: 10px;
+    font-family: 'Lora', serif;
+    font-size: 14px;
+    color: var(--amber);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .admin-action-btn:hover { background: var(--amber); color: white; }
+
+  .admin-action-btn.danger {
+    border-color: var(--terracotta);
+    color: var(--terracotta);
+  }
+  .admin-action-btn.danger:hover { background: var(--terracotta); color: white; }
+
+  /* ─── BOTTOM NAV ─── */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    border-top: 1px solid var(--warm);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 20px calc(10px + env(safe-area-inset-bottom));
+    z-index: 90;
+  }
+
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 11px;
+    color: var(--ink-light);
+    opacity: 0.5;
+    border: none;
+    background: transparent;
+    font-family: 'Lora', serif;
+  }
+  .bottom-nav-item.active {
+    opacity: 1;
+    color: var(--terracotta);
+    background: var(--cream);
+  }
+
+  .bottom-nav-item .icon { font-size: 20px; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 600px) {
+    nav { padding: 14px 20px; }
+    .hero { padding: 50px 20px 40px; }
+    .how-section { padding: 40px 20px; }
+    .dash-header { padding: 20px; }
+    .dash-body { padding: 20px; }
+    .opening-hero { padding: 40px 20px 30px; }
+    .note-cloud-section { padding: 30px 20px; }
+    .note-card { width: 100%; }
+    .admin-body { padding: 20px; }
+    .auth-card { padding: 32px 24px; }
+    .modal { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <a href="#" class="nav-brand" onclick="showScreen('landing')">
+    <span class="eye-icon">🫙</span>
+    <span>Liefdevolle Blik</span>
+  </a>
+  <div class="nav-links" id="nav-guest">
+    <button class="nav-btn ghost" onclick="showScreen('auth'); setTab('login')">Inloggen</button>
+    <button class="nav-btn solid" onclick="showScreen('auth'); setTab('register')">Account aanmaken</button>
+  </div>
+  <div class="nav-links" id="nav-user" style="display:none">
+    <button class="nav-btn ghost" onclick="showScreen('admin')">⚙ Beheer</button>
+    <button class="nav-btn solid" onclick="logout()">Uitloggen</button>
+  </div>
+</nav>
+
+<!-- ══ LANDING SCREEN ══ -->
+<div id="screen-landing" class="screen active">
+  <div class="hero">
+    <div class="hero-bg-circle"></div>
+    <div class="hero-bg-circle"></div>
+    <p class="hero-eyebrow">✦ voor elkaar, met liefde</p>
+    <h1>Het <em>blik</em> gaat<br>open op jouw dag</h1>
+    <p class="hero-subtitle">
+      Schrijf een persoonlijk briefje voor iemand in jouw groep.
+      Op de gekozen datum gaat het blik open — en stromen alle notities binnen.
+    </p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="showScreen('auth'); setTab('register')">Begin mee te schrijven</button>
+      <button class="btn-secondary" onclick="showScreen('auth'); setTab('login')">Al lid? Inloggen</button>
+    </div>
+  </div>
+
+  <div class="jar-container">
+    <svg class="jar-svg" width="180" height="220" viewBox="0 0 180 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Jar body -->
+      <path d="M38 70 Q30 80 28 110 Q24 160 28 185 Q32 205 90 207 Q148 205 152 185 Q156 160 152 110 Q150 80 142 70Z"
+        fill="#FAF6EE" stroke="#C8935A" stroke-width="2"/>
+      <!-- Jar shine -->
+      <path d="M55 90 Q52 120 53 150" stroke="white" stroke-width="8" stroke-linecap="round" opacity="0.5"/>
+      <!-- Jar lid base -->
+      <rect x="34" y="58" width="112" height="18" rx="6" fill="#E8D5B0" stroke="#C8935A" stroke-width="1.5"/>
+      <!-- Lid top -->
+      <rect x="44" y="50" width="92" height="14" rx="5" fill="#C8935A"/>
+      <!-- Notes inside -->
+      <g opacity="0.75">
+        <rect x="54" y="120" width="50" height="38" rx="4" fill="#FBEADC" transform="rotate(-8 54 120)" stroke="#E8B4A0" stroke-width="1"/>
+        <rect x="78" y="130" width="48" height="36" rx="4" fill="#FEF3E2" transform="rotate(5 78 130)" stroke="#E8D5B0" stroke-width="1"/>
+        <rect x="64" y="155" width="52" height="32" rx="4" fill="#EDE8F5" transform="rotate(-3 64 155)" stroke="#C8A8E0" stroke-width="1"/>
+        <!-- Note lines -->
+        <line x1="62" y1="130" x2="88" y2="128" stroke="#C8935A" stroke-width="1.5" stroke-linecap="round" opacity="0.4" transform="rotate(-8 54 120)"/>
+        <line x1="62" y1="137" x2="92" y2="135" stroke="#C8935A" stroke-width="1.5" stroke-linecap="round" opacity="0.4" transform="rotate(-8 54 120)"/>
+      </g>
+      <!-- Lock icon -->
+      <circle cx="90" cy="195" r="10" fill="white" stroke="#C8935A" stroke-width="1.5"/>
+      <text x="90" y="199" text-anchor="middle" font-size="12">🔒</text>
+      <!-- Decorative dots -->
+      <circle cx="152" cy="130" r="3" fill="#C8935A" opacity="0.4"/>
+      <circle cx="28" cy="155" r="2.5" fill="#B85C38" opacity="0.3"/>
+      <circle cx="160" cy="90" r="4" fill="#E8B4A0" opacity="0.5"/>
+    </svg>
+  </div>
+
+  <div class="how-section">
+    <p class="section-label">✦ zo werkt het</p>
+    <h2 class="section-title">Simpel, intiem, onvergetelijk</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Maak een account</h3>
+        <p>Meld je aan met je e-mailadres en 06-nummer. Jouw groep beheerder voegt je toe.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Schrijf een briefje</h3>
+        <p>Kies een groepslid en schrijf een persoonlijke, liefdevolle notitie voor hen.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Het blik blijft dicht</h3>
+        <p>Niemand kan lezen wat er is geschreven — tot de openingsdatum aanbreekt.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <h3>Open het blik</h3>
+        <p>Op de gekozen datum ontvang je alle notities via WhatsApp én e-mail.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 60px;"></div>
+</div>
+
+<!-- ══ AUTH SCREEN ══ -->
+<div id="screen-auth" class="screen" style="display:none">
+  <div style="display:flex; align-items:center; justify-content:center; min-height:calc(100vh - 70px); padding: 20px;">
+    <div class="auth-card">
+      <h2>Welkom</h2>
+      <p>Word onderdeel van een groep vol liefde en mooie woorden.</p>
+
+      <div class="tabs">
+        <button class="tab active" id="tab-login" onclick="setTab('login')">Inloggen</button>
+        <button class="tab" id="tab-register" onclick="setTab('register')">Account aanmaken</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="form-login">
+        <div class="form-group">
+          <label class="form-label">E-mailadres</label>
+          <input type="email" class="form-input" placeholder="jouw@email.nl">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Wachtwoord</label>
+          <input type="password" class="form-input" placeholder="••••••••">
+        </div>
+        <button class="auth-submit" onclick="login()">Inloggen →</button>
+        <div class="divider">of</div>
+        <div style="text-align:center; font-size:13px; color:var(--ink-light);">
+          Nog geen account?
+          <span style="color:var(--amber); cursor:pointer" onclick="setTab('register')"> Meld je aan</span>
+        </div>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="form-register" style="display:none">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Voornaam</label>
+            <input type="text" class="form-input" placeholder="Emma">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Achternaam</label>
+            <input type="text" class="form-input" placeholder="de Vries">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">E-mailadres</label>
+          <input type="email" class="form-input" placeholder="jouw@email.nl">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mobiel (06)</label>
+          <input type="tel" class="form-input" placeholder="06 12 34 56 78">
+          <p class="form-hint">Nodig voor WhatsApp notificaties op openingsdag</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Wachtwoord</label>
+          <input type="password" class="form-input" placeholder="Minimaal 8 tekens">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Groepscode</label>
+          <input type="text" class="form-input" placeholder="Ontvangen van de beheerder">
+          <p class="form-hint">Vraag de beheerder van jouw groep om een uitnodigingscode</p>
+        </div>
+        <button class="auth-submit" onclick="login()">Account aanmaken →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD SCREEN ══ -->
+<div id="screen-dashboard" class="screen" style="display:none">
+  <div class="dash-header">
+    <div>
+      <h2>Jouw groep 💛</h2>
+      <p>Familie de Vries · 8 leden · schrijf een notitie voor iemand</p>
+    </div>
+    <div class="countdown-badge">
+      <span class="lock-icon">🔒</span>
+      <div>
+        <span class="countdown-text">Blik gaat open op</span>
+        <strong>24 december 2025</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-body">
+    <p class="section-label" style="text-align:left; margin-bottom:20px;">✦ kies een persoon en schrijf een briefje</p>
+
+    <div class="members-grid" id="members-grid">
+      <!-- Dynamically filled -->
+    </div>
+
+    <div style="background: white; border-radius:16px; padding:24px; border:1px solid var(--ivory); box-shadow: 0 2px 10px var(--shadow);">
+      <h3 style="font-family:'Playfair Display',serif; font-size:17px; margin-bottom:8px;">📬 Jouw geschreven notities</h3>
+      <p style="font-size:14px; color:var(--ink-light); line-height:1.6;">
+        Je hebt tot nu toe <strong style="color:var(--terracotta)">3 briefjes</strong> geschreven.
+        Ze blijven verzegeld tot de openingsdatum. Je kunt zien voor wie je hebt geschreven, maar de inhoud is verborgen.
+      </p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
+        <span style="background:var(--cream); border:1px solid var(--warm); border-radius:100px; padding:6px 14px; font-size:13px; font-family:'Caveat',cursive; color:var(--amber)">
+          ✉ Voor Mama
+        </span>
+        <span style="background:var(--cream); border:1px solid var(--warm); border-radius:100px; padding:6px 14px; font-size:13px; font-family:'Caveat',cursive; color:var(--amber)">
+          ✉ Voor Thijs
+        </span>
+        <span style="background:var(--cream); border:1px solid var(--warm); border-radius:100px; padding:6px 14px; font-size:13px; font-family:'Caveat',cursive; color:var(--amber)">
+          ✉ Voor Opa
+        </span>
+      </div>
+    </div>
+
+    <div style="height: 80px;"></div>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <button class="bottom-nav-item active" onclick="showDashboard()">
+      <span class="icon">🫙</span>
+      <span>Groep</span>
+    </button>
+    <button class="bottom-nav-item" onclick="showScreen('opening')">
+      <span class="icon">💌</span>
+      <span>Openingsdag</span>
+    </button>
+    <button class="bottom-nav-item" onclick="showScreen('admin')">
+      <span class="icon">⚙</span>
+      <span>Beheer</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══ OPENING DAY SCREEN ══ -->
+<div id="screen-opening" class="screen" style="display:none">
+  <div class="opening-hero">
+    <p class="eyebrow">✨ het blik is open!</p>
+    <h2>Alle <em>liefde</em> voor jou</h2>
+    <p>Jouw groep heeft briefjes voor je achtergelaten. Hier zijn ze allemaal — stuur ze door via WhatsApp of e-mail.</p>
+    <div class="channel-btns">
+      <button class="channel-btn wa" onclick="showToast('✅ Verzonden via WhatsApp!')">
+        <span>💬</span> Stuur via WhatsApp
+      </button>
+      <button class="channel-btn mail" onclick="showToast('✅ E-mail verzonden!')">
+        <span>✉</span> Stuur via e-mail
+      </button>
+    </div>
+  </div>
+
+  <div class="note-cloud-section">
+    <h3>Jullie notities ☁️</h3>
+    <p>Klik op een notitie om hem volledig te lezen</p>
+    <div class="notes-mosaic" id="notes-mosaic">
+      <!-- Filled dynamically -->
+    </div>
+  </div>
+
+  <div style="height: 80px;"></div>
+
+  <div class="bottom-nav">
+    <button class="bottom-nav-item" onclick="showDashboard()">
+      <span class="icon">🫙</span>
+      <span>Groep</span>
+    </button>
+    <button class="bottom-nav-item active">
+      <span class="icon">💌</span>
+      <span>Openingsdag</span>
+    </button>
+    <button class="bottom-nav-item" onclick="showScreen('admin')">
+      <span class="icon">⚙</span>
+      <span>Beheer</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══ ADMIN SCREEN ══ -->
+<div id="screen-admin" class="screen" style="display:none">
+  <div class="admin-body">
+    <h2>Groepsbeheer</h2>
+    <p>Beheer leden, stel de openingsdatum in en kies de rapportagekanalen.</p>
+
+    <div class="admin-grid">
+      <div class="admin-card">
+        <h4>👥 Leden (8)</h4>
+        <div id="admin-members-list"></div>
+        <button class="admin-action-btn" style="margin-top:16px;" onclick="showToast('📧 Uitnodiging verstuurd!')">
+          + Lid uitnodigen
+        </button>
+      </div>
+
+      <div class="admin-card">
+        <h4>🗓 Openingsdatum</h4>
+        <div class="date-picker-section">
+          <label class="form-label">Datum dat het blik open gaat</label>
+          <input type="date" class="form-input" value="2025-12-24">
+          <label class="form-label" style="margin-top:16px;">Tijd van verzending</label>
+          <input type="time" class="form-input" value="08:00">
+          <button class="admin-action-btn" onclick="showToast('✅ Datum opgeslagen!')">
+            Datum opslaan
+          </button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h4>📡 Rapportagekanalen</h4>
+        <p style="font-size:13px; color:var(--ink-light); line-height:1.6; margin-bottom:20px;">
+          Op de openingsdatum sturen we alle notities automatisch via de gekozen kanalen naar alle leden.
+        </p>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <label style="display:flex; align-items:center; gap:12px; cursor:pointer; padding:12px; background:var(--cream); border-radius:10px; border:1.5px solid var(--warm);">
+            <input type="checkbox" checked style="width:16px; height:16px; accent-color:var(--terracotta)">
+            <span style="font-size:14px;">💬 <strong>WhatsApp</strong> (via 06-nummer)</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:12px; cursor:pointer; padding:12px; background:var(--cream); border-radius:10px; border:1.5px solid var(--warm);">
+            <input type="checkbox" checked style="width:16px; height:16px; accent-color:var(--terracotta)">
+            <span style="font-size:14px;">✉ <strong>E-mail</strong> (persoonlijk overzicht)</span>
+          </label>
+        </div>
+        <button class="admin-action-btn" style="margin-top:16px;" onclick="showToast('⚙ Instellingen opgeslagen!')">
+          Instellingen opslaan
+        </button>
+        <button class="admin-action-btn danger" onclick="showToast('📨 Testbericht verstuurd naar jou!')">
+          Verstuur testbericht
+        </button>
+      </div>
+
+      <div class="admin-card">
+        <h4>📊 Statistieken</h4>
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:14px; background:var(--cream); border-radius:10px;">
+            <span style="font-size:14px; color:var(--ink-light)">Geschreven notities</span>
+            <strong style="font-family:'Playfair Display',serif; font-size:24px; color:var(--terracotta)">24</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:14px; background:var(--cream); border-radius:10px;">
+            <span style="font-size:14px; color:var(--ink-light)">Leden die schreven</span>
+            <strong style="font-family:'Playfair Display',serif; font-size:24px; color:var(--terracotta)">7/8</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:14px; background:var(--cream); border-radius:10px;">
+            <span style="font-size:14px; color:var(--ink-light)">Dagen tot opening</span>
+            <strong style="font-family:'Playfair Display',serif; font-size:24px; color:var(--sage)">142</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 80px;"></div>
+
+  <div class="bottom-nav">
+    <button class="bottom-nav-item" onclick="showDashboard()">
+      <span class="icon">🫙</span>
+      <span>Groep</span>
+    </button>
+    <button class="bottom-nav-item" onclick="showScreen('opening')">
+      <span class="icon">💌</span>
+      <span>Openingsdag</span>
+    </button>
+    <button class="bottom-nav-item active">
+      <span class="icon">⚙</span>
+      <span>Beheer</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══ WRITE NOTE MODAL ══ -->
+<div class="modal-overlay" id="modal-note">
+  <div class="modal">
+    <button class="close-modal" onclick="closeModal()">✕</button>
+    <div class="modal-header">
+      <h3>Schrijf een briefje ✍️</h3>
+      <p>Dit blijft verzegeld tot de openingsdatum</p>
+    </div>
+    <div class="to-badge">
+      <span>Voor:</span>
+      <strong id="modal-to-name">Emma</strong>
+    </div>
+    <textarea
+      class="note-paper"
+      id="note-textarea"
+      placeholder="Lieve Emma, ik wil je laten weten dat..."
+      maxlength="500"
+      oninput="updateCharCount()"
+    ></textarea>
+    <div class="char-count"><span id="char-count">0</span>/500 tekens</div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Annuleren</button>
+      <button class="btn-send" onclick="submitNote()">Verzegeld insturen 🔒</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const members = [
+    { name: 'Mama', initial: 'M', notes: 6, role: 'Groepslid' },
+    { name: 'Papa', initial: 'P', notes: 4, role: 'Groepslid' },
+    { name: 'Emma', initial: 'E', notes: 7, role: 'Groepslid' },
+    { name: 'Thijs', initial: 'T', notes: 3, role: 'Groepslid' },
+    { name: 'Opa', initial: 'O', notes: 5, role: 'Groepslid' },
+    { name: 'Oma', initial: 'O', notes: 4, role: 'Groepslid' },
+    { name: 'Lotte', initial: 'L', notes: 2, role: 'Groepslid' },
+    { name: 'Jij', initial: 'J', notes: 0, role: 'Jij (ingelogd)', isYou: true },
+  ];
+
+  const sampleNotes = [
+    { from: 'Mama', to: 'Emma', text: 'Lieve Emma, ik ben zo trots op hoe je dit jaar bent gegroeid. Jij maakt ons leven elke dag een beetje mooier.', rot: '-2deg' },
+    { from: 'Papa', to: 'Mama', text: 'Jij bent het rustige middelpunt van ons gezin. Zonder jou zouden we compleet de kluts kwijt zijn!', rot: '1.5deg' },
+    { from: 'Opa', to: 'Thijs', text: 'Kleinkind, ik zie mezelf in jou en dat maakt me ongelofelijk gelukkig. Blijf wie je bent.', rot: '-1deg' },
+    { from: 'Emma', to: 'Lotte', text: 'Mijn lieve kleine zus. Bedankt voor al je lieve berichtjes op de moeilijke momenten dit jaar. Je betekent alles voor me.', rot: '2deg' },
+    { from: 'Lotte', to: 'Papa', text: 'Pap, jij leert me elke dag hoe ik de wereld met open armen tegemoet moet treden. Dankjewel.', rot: '-1.5deg' },
+    { from: 'Thijs', to: 'Opa', text: 'Opa, jouw verhalen zijn mijn favoriete boek. Ik luister elke keer met evenveel plezier.', rot: '1deg' },
+  ];
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function setTab(tab) {
+    document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
+    document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+    document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  }
+
+  function login() {
+    document.getElementById('nav-guest').style.display = 'none';
+    document.getElementById('nav-user').style.display = 'flex';
+    showDashboard();
+  }
+
+  function logout() {
+    document.getElementById('nav-guest').style.display = 'flex';
+    document.getElementById('nav-user').style.display = 'none';
+    showScreen('landing');
+  }
+
+  function showDashboard() {
+    showScreen('dashboard');
+    renderMembers();
+  }
+
+  function renderMembers() {
+    const grid = document.getElementById('members-grid');
+    grid.innerHTML = members.map(m => `
+      <div class="member-card" onclick="${m.isYou ? '' : `openNoteModal('${m.name}')`}">
+        <div class="member-avatar">${m.initial}</div>
+        <div class="member-name">${m.name}</div>
+        <div class="member-meta">${m.role}</div>
+        <div class="member-note-count">
+          <span>💌</span>
+          <span>${m.notes} notitie${m.notes !== 1 ? 's' : ''} ontvangen</span>
+        </div>
+        ${!m.isYou ? `<button class="write-note-btn" onclick="event.stopPropagation(); openNoteModal('${m.name}')">✍ Schrijf een briefje</button>` : '<div style="margin-top:12px; font-size:12px; color:var(--sage); text-align:center; opacity:0.7">Dat ben jij 😊</div>'}
+      </div>
+    `).join('');
+  }
+
+  function renderAdminMembers() {
+    const list = document.getElementById('admin-members-list');
+    list.innerHTML = members.map(m => `
+      <div class="member-list-item">
+        <div class="member-list-info">
+          <div class="mini-avatar">${m.initial}</div>
+          <div>
+            <div class="member-list-name">${m.name}</div>
+            <div class="member-list-meta">${m.isYou ? 'Beheerder' : m.role}</div>
+          </div>
+        </div>
+        <div class="status-dot"></div>
+      </div>
+    `).join('');
+  }
+
+  function renderNotes() {
+    const mosaic = document.getElementById('notes-mosaic');
+    mosaic.innerHTML = sampleNotes.map(n => `
+      <div class="note-card" style="--rot: ${n.rot}">
+        <div class="note-card-from">✦ Van ${n.from}</div>
+        <div class="note-card-to">Voor ${n.to}</div>
+        <div class="note-card-text">${n.text}</div>
+      </div>
+    `).join('');
+  }
+
+  function openNoteModal(name) {
+    document.getElementById('modal-to-name').textContent = name;
+    document.getElementById('note-textarea').value = '';
+    document.getElementById('char-count').textContent = '0';
+    document.getElementById('modal-note').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal-note').classList.remove('open');
+  }
+
+  function updateCharCount() {
+    const len = document.getElementById('note-textarea').value.length;
+    document.getElementById('char-count').textContent = len;
+  }
+
+  function submitNote() {
+    closeModal();
+    showToast('🔒 Briefje verzegeld! Het blijft verborgen tot de openingsdatum.');
+  }
+
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  // Initialize
+  renderNotes();
+  renderAdminMembers();
+
+  // Close modal on overlay click
+  document.getElementById('modal-note').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+</script>
+</body>
+</html>

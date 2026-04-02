@@ -9,8 +9,17 @@ additional_redirect_urls = [
 
 [auth.email]
 enable_confirmations = true
-max_frequency = "1m0s"
-otp_length = 8
+max_frequency = "10s"
+otp_length = 6
+
+[auth.email.smtp]
+enabled = true
+host = "smtp.resend.com"
+port = 465
+user = "resend"
+pass = "re_28ot3L9A_HYefcwFgskYvRPfuk3KGCAja"
+admin_email = "noreply@liefdevolleblik.nl"
+sender_name = "Miracle Relationship Matcher"
 
 [auth.mfa.totp]
 enroll_enabled = true

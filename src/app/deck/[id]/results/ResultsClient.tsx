@@ -3,12 +3,14 @@
 import { useState } from 'react'
 import type { CardWithScore } from '@/types/database'
 import { generateSummary } from '@/lib/actions/ai'
+import RealtimeSwipeCount from '@/components/RealtimeSwipeCount'
 
 interface ResultsClientProps {
   deckId: string
   deckTitle: string
   cards: CardWithScore[]
   participants: number
+  totalSwipes: number
   existingSummary: { markdown: string; priorities: string[]; conflicts: string[] } | null
 }
 
@@ -19,6 +21,7 @@ export default function ResultsClient({
   deckTitle,
   cards,
   participants,
+  totalSwipes,
   existingSummary,
 }: ResultsClientProps) {
   const [filter, setFilter] = useState<string>('all')
@@ -71,6 +74,13 @@ export default function ResultsClient({
 
   return (
     <div className="mt-8 space-y-8">
+      {/* Realtime counter */}
+      <RealtimeSwipeCount
+        deckId={deckId}
+        initialCount={totalSwipes}
+        initialParticipants={participants}
+      />
+
       {/* Filter + Export bar */}
       <div className="flex flex-wrap items-center gap-2">
         {categoryFilter.map((cat) => (

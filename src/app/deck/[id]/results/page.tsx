@@ -41,6 +41,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
         deckTitle={result.deck.title}
         cards={result.cards}
         participants={result.participants}
+        totalSwipes={result.cards.reduce((sum, c) => sum + c.swipe_count, 0)}
         existingSummary={existingSummary?.content || null}
       />
     </main>

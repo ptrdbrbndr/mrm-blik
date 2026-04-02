@@ -201,7 +201,7 @@ export default function OnboardingPage() {
                   </div>
                 </button>
                 <p className="text-xs text-primary/40 mt-2">
-                  {avatarPreview ? 'Foto geselecteerd ✓' : 'Voeg een profielfoto toe (optioneel)'}
+                  {avatarPreview ? 'Foto geselecteerd ✓' : 'Voeg een profielfoto toe *'}
                 </p>
                 <input
                   ref={fileInputRef}
@@ -333,7 +333,7 @@ export default function OnboardingPage() {
               <button
                 data-testid="onboarding-save"
                 onClick={handleSave}
-                disabled={saving || !displayName || !gender}
+                disabled={saving || !displayName || !gender || !avatarFile}
                 className="flex-[2] rounded-xl bg-accent py-3.5 text-sm font-semibold text-white hover:bg-accent-light transition-colors disabled:opacity-40"
               >
                 {saving ? 'Opslaan...' : 'Klaar! →'}

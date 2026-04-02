@@ -26,4 +26,38 @@ test.describe('Landing page', () => {
 
     await (page as any).vibeCheck('login-page')
   })
+
+  test('navigates to dashboard (redirects to login when not auth)', async ({ vibePage: page }) => {
+    await page.goto('/')
+    await page.getByTestId('cta-dashboard').click()
+
+    // Should redirect to login since not authenticated
+    await expect(page).toHaveURL(/\/login/)
+
+    await (page as any).vibeCheck('dashboard-redirect')
+  })
+
+  test('has correct meta tags', async ({ vibePage: page }) => {
+    await page.goto('/')
+
+    const title = await page.title()
+    expect(title).toContain('MRM-Blik')
+
+    const description = page.locator('meta[name="description"]')
+    await expect(description).toHaveAttribute('content', /productroadmap/)
+
+    const themeColor = page.locator('meta[name="theme-color"]')
+    await expect(themeColor).toHaveAttribute('content', '#1B2A4A')
+
+    await (page as any).vibeCheck('landing-meta')
+  })
+
+  test('has favicon and manifest', async ({ vibePage: page }) => {
+    await page.goto('/')
+
+    const manifest = page.locator('link[rel="manifest"]')
+    await expect(manifest).toHaveAttribute('href', '/manifest.json')
+
+    await (page as any).vibeCheck('landing-pwa')
+  })
 })

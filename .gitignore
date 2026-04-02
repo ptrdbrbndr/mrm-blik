@@ -44,3 +44,14 @@ next-env.d.ts
 
 # auth state
 testing/vibe-core/auth-state.json
+
+# supabase temp
+supabase/.temp/
+
+# python
+__pycache__/
+
+# office docs
+*.docx
+
+.vercel

@@ -10,4 +10,15 @@ test.describe('Results Dashboard', () => {
 
     await (page as any).vibeCheck('results-requires-auth')
   })
+
+  test('results page with invalid deck id redirects', async ({ vibePage: page }) => {
+    await page.goto('/deck/invalid-uuid/results')
+
+    // Should redirect to login (not authenticated) or dashboard (deck not found)
+    const url = page.url()
+    const isRedirected = url.includes('/login') || url.includes('/dashboard')
+    expect(isRedirected).toBeTruthy()
+
+    await (page as any).vibeCheck('results-invalid-deck')
+  })
 })

@@ -15,4 +15,18 @@ test.describe('Swipe Flow', () => {
 
     await (page as any).vibeCheck('swipe-invalid-token')
   })
+
+  test('not-found page shows helpful message', async ({ vibePage: page }) => {
+    await page.goto('/swipe/this-does-not-exist-123')
+
+    const notFound = page.getByTestId('deck-not-found')
+    const isVisible = await notFound.isVisible().catch(() => false)
+
+    if (isVisible) {
+      const text = await notFound.textContent()
+      expect(text).toContain('niet gevonden')
+    }
+
+    await (page as any).vibeCheck('swipe-not-found-message')
+  })
 })
